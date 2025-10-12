@@ -5,6 +5,9 @@ from fastapi.responses import PlainTextResponse # <-- IMPORTANTE: Importar esto
 
 from generator import create_dungeon_layout
 
+#figuras
+from figuras import GestorFiguras
+
 app = FastAPI(
     title="Dungeon Generator API",
     description="Una API para generar proceduralmente mapas de calabozos.",
@@ -15,6 +18,17 @@ class MapConfig(BaseModel):
     height: int = 30
     min_leaf_size: int = 6
     padding: Optional[int] = 1
+
+#para las figuras
+gestor = GestorFiguras(limite=5)
+# Supongamos que el usuario selecciona desde la checklist:
+seleccion_usuario = ["circulo", "elipse", "rectangulo"]
+for nombre in seleccion_usuario:
+    gestor.agregar_figura(nombre)
+
+mapa_final = gestor.generar(80, 80)
+
+
 
 @app.post("/generate_map/")
 def generate_map_endpoint(config: MapConfig):
