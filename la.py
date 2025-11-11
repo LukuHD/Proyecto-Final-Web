@@ -25,7 +25,14 @@ ENVIRONMENT_PRESETS = {
     'num_entrances': 5,
     'entrance_width': 3,
     # NUEVO: PROBABILIDAD DE HUB CENTRAL (1 en 4)
-    'has_central_hub_chance': 100,  # 25% de probabilidad
+    'has_central_hub_chance': 0.6,
+    # NUEVO: OBSTÁCULOS PARA EL BOSQUE - usando los mismos placers
+    'obstacles': [
+        # Rocas en el bosque - menos cantidad y más pequeñas
+        {'type': 'rock_cluster', 'count': 6},
+        # Troncos en el bosque - más delgados (1 espacio de ancho)
+        {'type': 'log', 'count': 8, 'min_length': 3, 'max_length': 6, 'thickness': 1}
+    ],
     'clearing_carvers': [
         {'type': 'horizontal_ellipse', 'weight': 1},
         {'type': 'vertical_ellipse', 'weight': 3},
@@ -34,8 +41,7 @@ ENVIRONMENT_PRESETS = {
         {'type': 'rectangle', 'weight': 2},
         {'type': 'triangle', 'weight': 1},
         {'type': 'medium_horizontal_cavern', 'weight': 5},
-        # NUEVO: AÑADIR CARVER DE HUB GRANDE (peso bajo para que sea ocasional)
-        {'type': 'large_central_hub', 'weight': 1}
+        {'type': 'large_central_hub', 'weight': 8}
     ],
     'ellipse_params': {
         'num_shapes': (6, 10), 
@@ -51,32 +57,28 @@ ENVIRONMENT_PRESETS = {
     'cellular_automata_birth_limit': 4, 
     'cellular_automata_death_limit': 3
 },
-    'path_focused': {  # CORREGIR: esta línea estaba mal indentada
-        'map_width': 80, 'map_height': 25,
-        'generator_algorithm': 'path_focused',
-        'path_width': 4,
-        'path_wiggle_room': 0.8,
-        'num_bifurcations': 12,
-        'bifurcation_length': (8, 20),
-        'bifurcation_width': 2,
-        # NUEVOS PARÁMETROS PARA CAMINOS MÁS NATURALES
-        'path_styles': ['straight', 'gentle_curve', 's_curve', 'natural'],
-        'path_style_weights': [2, 3, 2, 3],
-        'max_curve_deviation': 0.3,
-        'min_straight_segments': 3,
-        'max_straight_segments': 8,
-        # CONFIGURACIÓN DE HUB CENTRAL
-        'has_central_hub': True,
-        'central_hub_size': (12, 8),
-        'hub_connection_paths': 3,
-        'obstacles': [
-            {'type': 'rock_cluster', 'count': 20, 'min_radius': 1, 'max_radius': 1},
-            {'type': 'rock_cluster', 'count': 15, 'min_radius': 2, 'max_radius': 2},
-            {'type': 'rock_cluster', 'count': 8, 'min_radius': 2, 'max_radius': 3},
-            {'type': 'rock_cluster', 'count': 10, 'min_radius': 2, 'max_radius': 3, 'stretch': 2.5},
-            {'type': 'log', 'count': 15, 'min_length': 4, 'max_length': 8, 'thickness': 1}
-        ]
-    }
+'path_focused': {
+    'map_width': 80, 
+    'map_height': 25,
+    'generator_algorithm': 'path_focused',
+    'path_width': 6,
+    'path_wiggle_room': 0.8,
+    'num_bifurcations': 12,
+    'bifurcation_length': (8, 20),
+    'bifurcation_width': 4,
+    'path_styles': ['straight', 'gentle_curve', 's_curve', 'natural'],
+    'path_style_weights': [2, 3, 2, 3],
+    'max_curve_deviation': 0.3,
+    'min_straight_segments': 3,
+    'max_straight_segments': 8,
+    # CONFIGURACIÓN CON MUCHOS MENOS OBSTÁCULOS
+    'obstacles': [
+        # Pocas rocas grandes dentro de caminos
+        {'type': 'rock_cluster', 'count': 2},
+        # Pocos troncos dentro de caminos
+        {'type': 'log', 'count': 3, 'min_length': 4, 'max_length': 6, 'thickness': 2}
+    ]
+}
 }
 
 # --- 1.1. CLASES DE CONFIGURACIÓN MEJORADAS ---
@@ -169,8 +171,7 @@ class DungeonFactory(AbstractMapFactory):
         if not self.validate_config(config):
             raise ValueError("Configuración de mazmorra incompleta")
         return BspDungeonStrategy()
-
-# --- 3. ACTUALIZAR RobustForestFactory PARA INCLUIR EL NUEVO CARVER ---
+    
 class RobustForestFactory(AbstractMapFactory):
     """Fábrica concreta mejorada para mapas de tipo Bosque (Forest)."""
     
@@ -181,11 +182,12 @@ class RobustForestFactory(AbstractMapFactory):
                 raise ValueError("Configuración de bosque incompleta")
             
             carver_map = self._create_carvers()
+            obstacle_placers = self._create_obstacle_placers()
             
             if not carver_map:
                 raise ValueError("No se pudieron crear los carvers")
                 
-            return HybridForestStrategy(carver_map=carver_map)
+            return HybridForestStrategy(carver_map=carver_map, obstacle_placers=obstacle_placers)
             
         except KeyError:
             raise ValueError("Configuración de bosque no encontrada")
@@ -203,7 +205,7 @@ class RobustForestFactory(AbstractMapFactory):
             'rectangle': RectangleCarver,
             'triangle': TriangleCarver,
             'medium_horizontal_cavern': MediumHorizontalCavernCarver,
-            'large_central_hub': LargeCentralHubCarver  # NUEVO CARVER
+            'large_central_hub': LargeCentralHubCarver
         }
         
         for name, carver_class in carver_classes.items():
@@ -214,39 +216,12 @@ class RobustForestFactory(AbstractMapFactory):
                 
         return carvers
     
-    def get_environment_info(self) -> Dict[str, Any]:
-        base_info = super().get_environment_info()
-        base_info.update({
-            "description": "Generador de bosques con claros y caminos sinuosos (25% de probabilidad de hub central)",
-            "features": ["clearings", "paths", "cellular_automata", "entrances", "optional_central_hub"]
-        })
-        return base_info
-
-class RobustPathFactory(AbstractMapFactory):
-    def create_strategy(self) -> MapGenerationStrategy:
-        try:
-            config = PathConfig().get_config()
-            if not self.validate_config(config):
-                raise ValueError("Configuración de camino incompleta")
-            
-            placer_map = self._create_obstacle_placers()
-            
-            if not placer_map:
-                raise ValueError("No se pudieron crear los obstacle placers")
-                
-            return EnhancedPathFocusedStrategy(obstacle_placers=placer_map)  # CAMBIAR AQUÍ
-            
-        except KeyError:
-            raise ValueError("Configuración de camino no encontrada")
-        except Exception as e:
-            raise RuntimeError(f"Error creando estrategia de camino: {e}")
-    
     def _create_obstacle_placers(self) -> Dict[str, ObstaclePlacer]:
-        """Crear todos los obstacle placers con validación"""
+        """Crear obstacle placers para el bosque usando los existentes."""
         placers = {}
         placer_classes = {
-            'rock_cluster': RockClusterPlacer,
-            'log': LogPlacer
+            'rock_cluster': StrategicRockClusterPlacer,
+            'log': StrategicLogPlacer
         }
         
         for name, placer_class in placer_classes.items():
@@ -260,8 +235,60 @@ class RobustPathFactory(AbstractMapFactory):
     def get_environment_info(self) -> Dict[str, Any]:
         base_info = super().get_environment_info()
         base_info.update({
-            "description": "Generador de caminos con obstáculos y bifurcaciones",
-            "features": ["main_path", "bifurcations", "obstacles"]
+            "description": "Generador de bosques con claros, caminos sinuosos y obstáculos naturales",
+            "features": ["clearings", "paths", "cellular_automata", "entrances", "natural_obstacles"]
+        })
+        return base_info
+    
+    def get_environment_info(self) -> Dict[str, Any]:
+        base_info = super().get_environment_info()
+        base_info.update({
+            "description": "Generador de bosques con claros, caminos sinuosos y obstáculos naturales",
+            "features": ["clearings", "paths", "cellular_automata", "entrances", "natural_obstacles"]
+        })
+        return base_info
+
+class RobustPathFactory(AbstractMapFactory):
+    """Fábrica concreta mejorada para mapas de tipo Camino (Path-focused)."""
+    def create_strategy(self) -> MapGenerationStrategy:
+        try:
+            config = PathConfig().get_config()
+            if not self.validate_config(config):
+                raise ValueError("Configuración de camino incompleta")
+            
+            placer_map = self._create_obstacle_placers()
+            
+            if not placer_map:
+                raise ValueError("No se pudieron crear los obstacle placers")
+                
+            return EnhancedPathFocusedStrategy(obstacle_placers=placer_map)
+            
+        except KeyError:
+            raise ValueError("Configuración de camino no encontrada")
+        except Exception as e:
+            raise RuntimeError(f"Error creando estrategia de camino: {e}")
+    
+    def _create_obstacle_placers(self) -> Dict[str, ObstaclePlacer]:
+        """Crear todos los obstacle placers con validación"""
+        placers = {}
+        placer_classes = {
+            'rock_cluster': StrategicRockClusterPlacer,  # ACTUALIZADO
+            'log': StrategicLogPlacer  # ACTUALIZADO
+        }
+        
+        for name, placer_class in placer_classes.items():
+            try:
+                placers[name] = placer_class()
+            except Exception as e:
+                print(f"Advertencia: No se pudo crear {name}: {e}")
+                
+        return placers
+    
+    def get_environment_info(self) -> Dict[str, Any]:
+        base_info = super().get_environment_info()
+        base_info.update({
+            "description": "Generador de caminos con obstáculos estratégicos y bifurcaciones",
+            "features": ["main_path", "bifurcations", "strategic_obstacles", "natural_paths"]
         })
         return base_info
 
@@ -566,9 +593,9 @@ class EnhancedPathFocusedStrategy(MapGenerationStrategy):
             
         return path
 
-    def _carve_path(self, grid, path_nodes, width):
-        """Tallar el camino en el grid."""
-        radius = max(1, width // 2)
+    def _carve_path(self, grid, path_nodes, path_width):
+        """Tallar el camino en el grid con el ancho especificado."""
+        radius = max(1, path_width // 2)
         for y, x in path_nodes:
             for dy in range(-radius, radius + 1):
                 for dx in range(-radius, radius + 1):
@@ -576,7 +603,6 @@ class EnhancedPathFocusedStrategy(MapGenerationStrategy):
                         ny, nx = y + dy, x + dx
                         if 0 <= ny < grid.shape[0] and 0 <= nx < grid.shape[1]:
                             grid[ny, nx] = 1
-                            
 
 # --- 2. AÑADIR NUEVO CARVER PARA HUB CENTRAL ---
 class LargeCentralHubCarver(ClearingCarver):
@@ -793,45 +819,267 @@ class TriangleCarver(ClearingCarver):
 
 # --- 5. CLASES PARA COLOCAR OBSTÁCULOS (SIN CAMBIOS) ---
 
-class RockClusterPlacer(ObstaclePlacer):
+class StrategicObstaclePlacer(ABC):
+    """Clase base mejorada para generadores de obstáculos con lógica estratégica."""
+    @abstractmethod
+    def place(self, grid, path_coords, config):
+        pass
+    
+    def _is_valid_obstacle_position(self, grid, x, y, min_distance_from_path=1):
+        """Verifica si una posición es válida para colocar un obstáculo."""
+        if not (0 <= y < grid.shape[0] and 0 <= x < grid.shape[1]):
+            return False
+        
+        # Permitir obstáculos cerca de caminos para obstruirlos
+        # Pero asegurarse de que no bloqueen completamente
+        for dy in range(-min_distance_from_path, min_distance_from_path + 1):
+            for dx in range(-min_distance_from_path, min_distance_from_path + 1):
+                ny, nx = y + dy, x + dx
+                if 0 <= ny < grid.shape[0] and 0 <= nx < grid.shape[1]:
+                    if grid[ny, nx] == 1:  # Es un camino
+                        # Verificar que no bloquee completamente
+                        if not self._allows_path_passage(grid, x, y, min_distance_from_path):
+                            return False
+        return True
+    
+    def _allows_path_passage(self, grid, x, y, radius):
+        """Verifica que colocar un obstáculo aquí no bloquee completamente el paso."""
+        # Contar caminos adyacentes
+        adjacent_paths = 0
+        for dy in range(-radius, radius + 1):
+            for dx in range(-radius, radius + 1):
+                if dx == 0 and dy == 0:
+                    continue
+                ny, nx = y + dy, x + dx
+                if 0 <= ny < grid.shape[0] and 0 <= nx < grid.shape[1]:
+                    if grid[ny, nx] == 1:
+                        adjacent_paths += 1
+        
+        # Si hay suficientes caminos adyacentes, permite el paso
+        return adjacent_paths >= 2
+
+class StrategicRockClusterPlacer(StrategicObstaclePlacer):
+    """Coloca grupos de rocas de tamaño 2x2 o más dentro de los caminos."""
+    
     def place(self, grid, path_coords, config):
         map_height, map_width = grid.shape
         count = config.get('count', 1)
-        min_r = config.get('min_radius', 1)
-        max_r = config.get('max_radius', 2)
-        stretch = config.get('stretch', 1.0)
-        for _ in range(count):
-            if not path_coords: continue
-            center_y, center_x = random.choice(path_coords)
-            ry = random.randint(min_r, max_r)
-            rx = int(ry * stretch)
+        
+        # Tamaños de rocas: mínimo 2x2, máximo 4x4
+        rock_sizes = [
+            (2, 2), (2, 2), (2, 2),  # Principalmente 2x2
+            (3, 2), (2, 3),           # Algunas ovaladas
+            (3, 3)                    # Pocas más grandes
+        ]
+        
+        print(f"Colocando {count} grupos de rocas (2x2 mínimo) dentro de caminos")
+        
+        placed = 0
+        attempts = 0
+        max_attempts = count * 20  # Más intentos para encontrar buenas posiciones
+        
+        # Filtrar posiciones para evitar el camino principal
+        side_path_coords = self._get_side_path_coords(grid, path_coords)
+        
+        while placed < count and attempts < max_attempts:
+            attempts += 1
+            
+            # Preferir caminos laterales sobre el principal
+            if side_path_coords and random.random() < 0.7:  # 70% en caminos laterales
+                center_y, center_x = random.choice(side_path_coords)
+            elif path_coords:
+                center_y, center_x = random.choice(path_coords)
+            else:
+                break
+            
+            # Elegir un tamaño de roca (mínimo 2x2)
+            rx, ry = random.choice(rock_sizes)
+            
+            # Verificar que podemos colocar la roca aquí
+            can_place = True
+            rocks_to_place = []
+            
             for x_offset in range(-rx, rx + 1):
                 for y_offset in range(-ry, ry + 1):
+                    # Fórmula de elipse para formas más naturales
                     if (x_offset**2 / max(1, rx**2)) + (y_offset**2 / max(1, ry**2)) <= 1:
                         x, y = center_x + x_offset, center_y + y_offset
-                        if 0 <= y < map_height and 0 <= x < map_width and grid[y, x] == 1:
-                            grid[y, x] = 2
+                        if (0 <= y < map_height and 0 <= x < map_width):
+                            # Solo colocar en caminos existentes y que no tengan obstáculos
+                            if grid[y, x] == 1:  # Es un camino sin obstáculos
+                                rocks_to_place.append((y, x))
+                            else:
+                                can_place = False
+                                break
+                if not can_place:
+                    break
+            
+            # Verificar que tenemos al menos 4 celdas (2x2 mínimo)
+            if can_place and len(rocks_to_place) >= 4:
+                # Colocar las rocas
+                for y, x in rocks_to_place:
+                    grid[y, x] = 2  # 2 para rocas
+                placed += 1
+                print(f"  - Roca {placed}: {rx}x{ry} en ({center_x}, {center_y}) con {len(rocks_to_place)} celdas")
+    
+    def _get_side_path_coords(self, grid, path_coords):
+        """Obtiene coordenadas de caminos que no son el principal."""
+        if not path_coords:
+            return []
+        
+        # Identificar el camino principal (asumiendo que es el más largo)
+        # En una implementación más sofisticada, podríamos etiquetar caminos
+        # Por ahora, simplemente tomamos una muestra aleatoria
+        return random.sample(path_coords, min(len(path_coords) // 2, len(path_coords)))
 
-class LogPlacer(ObstaclePlacer):
+class StrategicLogPlacer(StrategicObstaclePlacer):
+    """Coloca troncos dentro de caminos de manera estratégica."""
+    
     def place(self, grid, path_coords, config):
         map_height, map_width = grid.shape
         count = config.get('count', 1)
         min_len = config.get('min_length', 3)
         max_len = config.get('max_length', 6)
-        thickness = config.get('thickness', 1)
-        for _ in range(count):
-            if not path_coords: continue
-            start_y, start_x = random.choice(path_coords)
+        thickness = 2  # 2 espacios de ancho
+        
+        print(f"Colocando {count} troncos dentro de caminos")
+        
+        placed = 0
+        attempts = 0
+        max_attempts = count * 25
+        
+        # Filtrar posiciones para evitar el camino principal
+        side_path_coords = self._get_side_path_coords(grid, path_coords)
+        
+        while placed < count and attempts < max_attempts:
+            attempts += 1
+            
+            # Preferir caminos laterales sobre el principal
+            if side_path_coords and random.random() < 0.7:  # 70% en caminos laterales
+                start_y, start_x = random.choice(side_path_coords)
+            elif path_coords:
+                start_y, start_x = random.choice(path_coords)
+            else:
+                break
+            
+            # Orientación basada en la forma del camino
+            horizontal = self._should_be_horizontal(grid, start_x, start_y)
             length = random.randint(min_len, max_len)
-            horizontal = random.choice([True, False])
+            
+            # Ajustar posición para que el tronco quede mejor alineado
+            start_x, start_y = self._adjust_start_position(grid, start_x, start_y, length, horizontal, thickness)
+            
+            # Verificar que el tronco quepa y esté dentro del camino
+            if self._is_valid_log_position(grid, start_x, start_y, length, horizontal, thickness):
+                self._place_log(grid, start_x, start_y, length, horizontal, thickness)
+                placed += 1
+                print(f"  - Tronco {placed}: {length}x{thickness} en ({start_x}, {start_y}), {'horizontal' if horizontal else 'vertical'}")
+    
+    def _get_side_path_coords(self, grid, path_coords):
+        """Obtiene coordenadas de caminos que no son el principal."""
+        if not path_coords:
+            return []
+        
+        # Identificar el camino principal (asumiendo que es el más largo)
+        # En una implementación más sofisticada, podríamos etiquetar caminos
+        # Por ahora, simplemente tomamos una muestra aleatoria
+        return random.sample(path_coords, min(len(path_coords) // 2, len(path_coords)))
+    
+    def _should_be_horizontal(self, grid, x, y):
+        """Determina si el tronco debe ser horizontal basado en el entorno."""
+        # Analizar la dirección predominante del camino en esta área
+        horizontal_path = 0
+        vertical_path = 0
+        
+        # Verificar en un área más grande
+        for dy in range(-3, 4):
+            for dx in range(-3, 4):
+                ny, nx = y + dy, x + dx
+                if 0 <= ny < grid.shape[0] and 0 <= nx < grid.shape[1] and grid[ny, nx] == 1:
+                    # Contar continuidad horizontal vs vertical
+                    if abs(dx) > abs(dy):
+                        horizontal_path += 1
+                    else:
+                        vertical_path += 1
+        
+        # Si hay más camino horizontal, poner tronco vertical para cruzar
+        return horizontal_path < vertical_path
+    
+    def _adjust_start_position(self, grid, start_x, start_y, length, horizontal, thickness):
+        """Ajusta la posición inicial para que el tronco quede mejor alineado con el camino."""
+        if horizontal:
+            # Para troncos horizontales, buscar una posición donde haya camino continuo
+            for offset in range(-2, 3):
+                new_y = start_y + offset
+                if 0 <= new_y < grid.shape[0] and self._has_horizontal_clearance(grid, start_x, new_y, length, thickness):
+                    return start_x, new_y
+        else:
+            # Para troncos verticales, buscar una posición donde haya camino continuo
+            for offset in range(-2, 3):
+                new_x = start_x + offset
+                if 0 <= new_x < grid.shape[1] and self._has_vertical_clearance(grid, new_x, start_y, length, thickness):
+                    return new_x, start_y
+        
+        return start_x, start_y
+    
+    def _has_horizontal_clearance(self, grid, x, y, length, thickness):
+        """Verifica si hay espacio horizontal continuo para un tronco."""
+        if x + length >= grid.shape[1] or y + thickness >= grid.shape[0]:
+            return False
+            
+        for i in range(length):
+            for t in range(thickness):
+                if grid[y + t, x + i] != 1:  # No es camino
+                    return False
+        return True
+    
+    def _has_vertical_clearance(self, grid, x, y, length, thickness):
+        """Verifica si hay espacio vertical continuo para un tronco."""
+        if y + length >= grid.shape[0] or x + thickness >= grid.shape[1]:
+            return False
+            
+        for i in range(length):
+            for t in range(thickness):
+                if grid[y + i, x + t] != 1:  # No es camino
+                    return False
+        return True
+    
+    def _is_valid_log_position(self, grid, start_x, start_y, length, horizontal, thickness):
+        """Verifica si es seguro colocar un tronco en esta posición."""
+        # Verificar que todas las celdas del tronco estén en caminos y sin obstáculos
+        if horizontal:
+            if start_x + length >= grid.shape[1] or start_y + thickness >= grid.shape[0]:
+                return False
             for i in range(length):
                 for t in range(thickness):
-                    if horizontal:
-                        x, y = start_x + i, start_y + t
-                    else:
-                        x, y = start_x + t, start_y + i
-                    if 0 <= y < map_height and 0 <= x < map_width and grid[y, x] == 1:
-                        grid[y, x] = 2
+                    x, y = start_x + i, start_y + t
+                    if not (0 <= y < grid.shape[0] and 0 <= x < grid.shape[1]):
+                        return False
+                    if grid[y, x] != 1:  # Debe estar en un camino sin obstáculos
+                        return False
+        else:
+            if start_y + length >= grid.shape[0] or start_x + thickness >= grid.shape[1]:
+                return False
+            for i in range(length):
+                for t in range(thickness):
+                    x, y = start_x + t, start_y + i
+                    if not (0 <= y < grid.shape[0] and 0 <= x < grid.shape[1]):
+                        return False
+                    if grid[y, x] != 1:  # Debe estar en un camino sin obstáculos
+                        return False
+        
+        return True
+    
+    def _place_log(self, grid, start_x, start_y, length, horizontal, thickness):
+        """Coloca un tronco en la posición especificada."""
+        for i in range(length):
+            for t in range(thickness):
+                if horizontal:
+                    x, y = start_x + i, start_y + t
+                else:
+                    x, y = start_x + t, start_y + i
+                if 0 <= y < grid.shape[0] and 0 <= x < grid.shape[1] and grid[y, x] == 1:
+                    grid[y, x] = 3  # 3 para troncos
 
 # --- 6. ESTRATEGIAS DE GENERACIÓN MEJORADAS ---
 
@@ -914,18 +1162,47 @@ class BspDungeonStrategy(MapGenerationStrategy):
         if r1 and r2: return random.choice([r1, r2])
         return r1 or r2
 
+
 class HybridForestStrategy(MapGenerationStrategy):
     def get_name(self) -> str:
         return "Hybrid Forest Generator"
     
     def get_supported_features(self) -> List[str]:
-        return ["clearings", "paths", "cellular_automata", "entrances"]
+        features = ["clearings", "paths", "cellular_automata", "entrances"]
+        if hasattr(self, 'obstacle_placers') and self.obstacle_placers:
+            features.append("obstacles")
+        return features
     
-    def __init__(self, carver_map: Dict[str, ClearingCarver]):
+    def __init__(self, carver_map: Dict[str, ClearingCarver], obstacle_placers: Dict[str, ObstaclePlacer] = None):
         self.carver_map = carver_map
+        self.obstacle_placers = obstacle_placers or {}
 
-    # ... (resto del código de HybridForestStrategy sin cambios)
-    Leaf = BspDungeonStrategy.Leaf
+    # Definir la clase Leaf dentro de HybridForestStrategy
+    class Leaf:
+        def __init__(self, x, y, width, height):
+            self.x, self.y, self.width, self.height = x, y, width, height
+            self.child_1, self.child_2, self.room = None, None, None
+            self.center_point = None  # Añadir este atributo para compatibilidad
+            
+        def split(self, min_leaf_size):
+            if self.child_1 is not None or self.child_2 is not None: 
+                return False
+            split_horizontally = random.choice([True, False])
+            if self.width > self.height and self.width / self.height >= 1.25: 
+                split_horizontally = False
+            elif self.height > self.width and self.height / self.width >= 1.25: 
+                split_horizontally = True
+            max_size = (self.height if split_horizontally else self.width) - min_leaf_size
+            if max_size <= min_leaf_size: 
+                return False
+            split_point = random.randint(min_leaf_size, max_size)
+            if split_horizontally:
+                self.child_1 = HybridForestStrategy.Leaf(self.x, self.y, self.width, split_point)
+                self.child_2 = HybridForestStrategy.Leaf(self.x, self.y + split_point, self.width, self.height - split_point)
+            else:
+                self.child_1 = HybridForestStrategy.Leaf(self.x, self.y, split_point, self.height)
+                self.child_2 = HybridForestStrategy.Leaf(self.x + split_point, self.y, self.width - split_point, self.height)
+            return True
 
     def generate(self, config):
         self.config = config
@@ -958,14 +1235,32 @@ class HybridForestStrategy(MapGenerationStrategy):
         for parent in [l for l in leaves if l.child_1 is not None]:
             p1 = self._get_point_from_leaf(parent.child_1)
             p2 = self._get_point_from_leaf(parent.child_2)
-            if p1 and p2: self._create_path_segment(p1, p2)
+            if p1 and p2: 
+                self._create_path_segment(p1, p2)
         
         self._add_extra_connections()
+        
+        # AÑADIR OBSTÁCULOS AL BOSQUE
+        if self.obstacle_placers and 'obstacles' in config:
+            print("Colocando obstáculos en el bosque...")
+            # Obtener todas las coordenadas de caminos y claros
+            path_and_clearing_coords = list(zip(*np.where(self.grid == 1)))
+            
+            for obstacle_config in config.get('obstacles', []):
+                obs_type = obstacle_config['type']
+                if obs_type in self.obstacle_placers:
+                    placer = self.obstacle_placers[obs_type]
+                    print(f" - Colocando {obstacle_config['count']} de tipo '{obs_type}'")
+                    placer.place(self.grid, path_and_clearing_coords, obstacle_config)
+                else:
+                    print(f"Advertencia: Tipo de obstáculo '{obs_type}' no reconocido.")
+        
         self._add_forest_floor()
         self._create_entrances_and_exits()
         
         return self.grid
 
+    # Los métodos restantes (_partition_space, _apply_cellular_automata, etc.) permanecen igual
     def _partition_space(self):
         map_w, map_h, min_leaf = self.config['map_width'], self.config['map_height'], self.config['min_leaf_size']
         root_leaf = self.Leaf(0, 0, map_w, map_h)
@@ -991,22 +1286,28 @@ class HybridForestStrategy(MapGenerationStrategy):
                     if 0 < global_x < self.config['map_width'] -1 and 0 < global_y < self.config['map_height'] - 1:
                         neighbors = sum(1 for dy in [-1, 0, 1] for dx in [-1, 0, 1] if not (dx == 0 and dy == 0) and 0 <= global_y + dy < self.config['map_height'] and 0 <= global_x + dx < self.config['map_width'] and temp_grid[global_y + dy, global_x + dx] == 1)
                         if temp_grid[global_y, global_x] == 1:
-                            if neighbors < death_limit: new_grid_segment[y_local, x_local] = 0
-                        elif neighbors > birth_limit: new_grid_segment[y_local, x_local] = 1
+                            if neighbors < death_limit: 
+                                new_grid_segment[y_local, x_local] = 0
+                        elif neighbors > birth_limit: 
+                            new_grid_segment[y_local, x_local] = 1
             self.grid[leaf.y : leaf.y + leaf.height, leaf.x : leaf.x + leaf.width] = new_grid_segment
             temp_grid[leaf.y : leaf.y + leaf.height, leaf.x : leaf.x + leaf.width] = new_grid_segment
             
     def _get_point_from_leaf(self, leaf):
-        if hasattr(leaf, 'center_point') and leaf.center_point: return leaf.center_point
-        if leaf.child_1 is None and leaf.child_2 is None: return None
+        if hasattr(leaf, 'center_point') and leaf.center_point: 
+            return leaf.center_point
+        if leaf.child_1 is None and leaf.child_2 is None: 
+            return None
         p1 = self._get_point_from_leaf(leaf.child_1) if leaf.child_1 else None
         p2 = self._get_point_from_leaf(leaf.child_2) if leaf.child_2 else None
-        if p1 and p2: return random.choice([p1, p2])
+        if p1 and p2: 
+            return random.choice([p1, p2])
         return p1 or p2
 
     def _create_path_segment(self, start_point, end_point):
         path = self._find_path_a_star(start_point, end_point)
-        if not path: return
+        if not path: 
+            return
         path_width = self.config['path_width']
         radius = max(1, path_width // 2)
         carver = self.carver_map['circle']
@@ -1015,7 +1316,8 @@ class HybridForestStrategy(MapGenerationStrategy):
 
     def _add_extra_connections(self):
         extra_prob = self.config['extra_path_connections_prob']
-        if extra_prob <= 0 or len(self.clearing_centers) < 2: return
+        if extra_prob <= 0 or len(self.clearing_centers) < 2: 
+            return
         for p1 in self.clearing_centers:
             if random.random() < extra_prob:
                 potential_targets = [p for p in self.clearing_centers if p != p1]
@@ -1034,7 +1336,9 @@ class HybridForestStrategy(MapGenerationStrategy):
             _, current = heapq.heappop(open_set)
             if current == end:
                 path = []
-                while current in came_from: path.append(current); current = came_from[current]
+                while current in came_from: 
+                    path.append(current); 
+                    current = came_from[current]
                 return path[::-1]
             for dx, dy in [(0,1), (0,-1), (1,0), (-1,0), (1,1), (1,-1), (-1,1), (-1,-1)]:
                 neighbor = (current[0] + dx, current[1] + dy)
@@ -1050,32 +1354,41 @@ class HybridForestStrategy(MapGenerationStrategy):
                             heapq.heappush(open_set, (f_score[neighbor], neighbor))
         return None
         
-    def _heuristic(self, a, b): return abs(a[0] - b[0]) + abs(a[1] - b[1])
+    def _heuristic(self, a, b): 
+        return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
     def _add_forest_floor(self):
         density = self.config['forest_density']
         for y in range(self.config['map_height']):
             for x in range(self.config['map_width']):
-                if self.grid[y, x] == 0 and random.random() < density: self.grid[y, x] = 1
+                if self.grid[y, x] == 0 and random.random() < density: 
+                    self.grid[y, x] = 1
 
     def _create_entrances_and_exits(self):
         num_entrances, entrance_width = self.config.get('num_entrances', 0), self.config.get('entrance_width', 1)
-        if num_entrances == 0: return
+        if num_entrances == 0: 
+            return
         width, height = self.config['map_width'], self.config['map_height']
         possible_entry_points = []
         for x in range(1, width - 1):
-            if self.grid[1, x] == 1: possible_entry_points.append((x, 0))
-            if self.grid[height - 2, x] == 1: possible_entry_points.append((x, height - 1))
+            if self.grid[1, x] == 1: 
+                possible_entry_points.append((x, 0))
+            if self.grid[height - 2, x] == 1: 
+                possible_entry_points.append((x, height - 1))
         for y in range(1, height - 1):
-            if self.grid[y, 1] == 1: possible_entry_points.append((0, y))
-            if self.grid[y, width - 2] == 1: possible_entry_points.append((width - 1, y))
+            if self.grid[y, 1] == 1: 
+                possible_entry_points.append((0, y))
+            if self.grid[y, width - 2] == 1: 
+                possible_entry_points.append((width - 1, y))
         random.shuffle(possible_entry_points)
         for i, (center_x, center_y) in enumerate(possible_entry_points):
-            if i >= num_entrances: break
+            if i >= num_entrances: 
+                break
             is_horizontal = (center_y == 0 or center_y == height - 1)
             for j in range(-(entrance_width // 2), (entrance_width // 2) + 1):
                 x, y = (center_x + j, center_y) if is_horizontal else (center_x, center_y + j)
-                if 0 <= x < width and 0 <= y < height: self.grid[y, x] = 1
+                if 0 <= x < width and 0 <= y < height: 
+                    self.grid[y, x] = 1
 
 class PathFocusedStrategy(MapGenerationStrategy):
     def get_name(self) -> str:
@@ -1235,17 +1548,32 @@ class MapGenerator:
 # --- 8. FUNCIÓN PARA IMPRIMIR EL MAPA ---
 def print_map(grid, environment_type):
     if 'path_focused' in environment_type:
-        chars = {0: '♣', 1: '░', 2: '█'}
+        # Diferentes símbolos para cada tipo de obstáculo
+        chars = {
+            0: ' ',    # Espacio vacío
+            1: '·',    # Camino
+            2: '■',    # Rocas (bloques sólidos)
+            3: '≡'     # Troncos
+        }
     elif 'forest' in environment_type:
-        chars = {0: '♣', 1: '.'}
+        chars = {
+            0: '♣',    # Árboles/bosque
+            1: '.',    # Camino
+            2: '■',    # Rocas
+            3: '≡'     # Troncos
+        }
     else: #dungeon
-        chars = {0: '#', 1: '.'}
+        chars = {
+            0: '#',    # Pared
+            1: '.',    # Suelo
+            2: '■',    # Rocas
+            3: '≡'     # Troncos
+        }
         
     print(f"--- Mapa generado: {environment_type.replace('_', ' ').title()} ---")
     for row in grid:
         print("".join([chars.get(cell, '?') for cell in row]))
     print("\n")
-
 # --- 9. BLOQUE DE EJECUCIÓN PRINCIPAL MEJORADO ---
 if __name__ == "__main__":
     # Registrar fábricas dinámicamente
