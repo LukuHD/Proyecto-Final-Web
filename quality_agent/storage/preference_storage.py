@@ -4,6 +4,8 @@ import os
 class PreferenceStorage:
     def __init__(self, storage_path='data/preferences.json'):
         self.storage_path = storage_path
+        # Create the directory if it doesn't exist
+        os.makedirs(os.path.dirname(self.storage_path), exist_ok=True)
         self.preferences = {}
         self.load_preferences()
 

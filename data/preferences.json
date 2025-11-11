@@ -1,0 +1,1437 @@
+{
+    "test_user_1": {
+        "comparisons": [
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "B"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "B"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 85
+                        },
+                        "density": {
+                            "score": 70
+                        },
+                        "room_distribution": {
+                            "score": 75
+                        },
+                        "corridor_quality": {
+                            "score": 80
+                        },
+                        "dead_ends": {
+                            "score": 90
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 90
+                        },
+                        "density": {
+                            "score": 65
+                        },
+                        "room_distribution": {
+                            "score": 80
+                        },
+                        "corridor_quality": {
+                            "score": 75
+                        },
+                        "dead_ends": {
+                            "score": 85
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3673
+                        },
+                        "room_distribution": {
+                            "score": 0.757
+                        },
+                        "corridor_quality": {
+                            "score": 0.1942
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.4067
+                        },
+                        "room_distribution": {
+                            "score": 0.6651
+                        },
+                        "corridor_quality": {
+                            "score": 0.0902
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3027
+                        },
+                        "room_distribution": {
+                            "score": 0.7596
+                        },
+                        "corridor_quality": {
+                            "score": 0.2048
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3813
+                        },
+                        "room_distribution": {
+                            "score": 0.766
+                        },
+                        "corridor_quality": {
+                            "score": 0.0997
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "preferred": "B"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3173
+                        },
+                        "room_distribution": {
+                            "score": 0.7789
+                        },
+                        "corridor_quality": {
+                            "score": 0.1681
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.4033
+                        },
+                        "room_distribution": {
+                            "score": 0.6932
+                        },
+                        "corridor_quality": {
+                            "score": 0.1025
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.2913
+                        },
+                        "room_distribution": {
+                            "score": 0.7711
+                        },
+                        "corridor_quality": {
+                            "score": 0.1968
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.412
+                        },
+                        "room_distribution": {
+                            "score": 0.7449
+                        },
+                        "corridor_quality": {
+                            "score": 0.1165
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "preferred": "B"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.254
+                        },
+                        "room_distribution": {
+                            "score": 0.7616
+                        },
+                        "corridor_quality": {
+                            "score": 0.1102
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3827
+                        },
+                        "room_distribution": {
+                            "score": 0.717
+                        },
+                        "corridor_quality": {
+                            "score": 0.115
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "preferred": "B"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3127
+                        },
+                        "room_distribution": {
+                            "score": 0.7728
+                        },
+                        "corridor_quality": {
+                            "score": 0.0746
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3947
+                        },
+                        "room_distribution": {
+                            "score": 0.7629
+                        },
+                        "corridor_quality": {
+                            "score": 0.1351
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "preferred": "B"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3027
+                        },
+                        "room_distribution": {
+                            "score": 0.7672
+                        },
+                        "corridor_quality": {
+                            "score": 0.163
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3347
+                        },
+                        "room_distribution": {
+                            "score": 0.7445
+                        },
+                        "corridor_quality": {
+                            "score": 0.1454
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "preferred": "B"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.28
+                        },
+                        "room_distribution": {
+                            "score": 0.782
+                        },
+                        "corridor_quality": {
+                            "score": 0.1476
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.408
+                        },
+                        "room_distribution": {
+                            "score": 0.715
+                        },
+                        "corridor_quality": {
+                            "score": 0.0817
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.384
+                        },
+                        "room_distribution": {
+                            "score": 0.7497
+                        },
+                        "corridor_quality": {
+                            "score": 0.0972
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3527
+                        },
+                        "room_distribution": {
+                            "score": 0.7593
+                        },
+                        "corridor_quality": {
+                            "score": 0.0662
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.2747
+                        },
+                        "room_distribution": {
+                            "score": 0.7664
+                        },
+                        "corridor_quality": {
+                            "score": 0.2136
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.348
+                        },
+                        "room_distribution": {
+                            "score": 0.7599
+                        },
+                        "corridor_quality": {
+                            "score": 0.0613
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "preferred": "A"
+            }
+        ]
+    }
+}

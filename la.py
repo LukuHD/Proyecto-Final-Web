@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 import heapq
 from typing import Dict, Any, List, Tuple  # Agregar Tuple
 import math  # Agregar math
+from copy import deepcopy
 
 # --- 1. CONFIGURACIONES DE ENTORNOS ---
 ENVIRONMENT_PRESETS = {
@@ -1112,7 +1113,8 @@ class BspDungeonStrategy(MapGenerationStrategy):
             return True
         def create_room(self, config):
             if self.child_1 is not None or self.child_2 is not None: return
-            padding, room_min_size = 2, config['room_min_size']
+            room_min_size = config.get('room_min_size', 4)
+            padding = max(0, config.get('room_padding', 2))
             if self.width < room_min_size + padding or self.height < room_min_size + padding: self.room = None; return
             shape_bias = random.choice(config['room_shape_biases'])
             try:
@@ -1522,15 +1524,15 @@ class MapGenerator:
     def __init__(self, environment_type='dungeon'):
         if environment_type not in ENVIRONMENT_PRESETS:
             raise ValueError(f"Tipo de entorno no válido: '{environment_type}'")
-        
-        self.config = ENVIRONMENT_PRESETS[environment_type]
+
+        self.config = deepcopy(ENVIRONMENT_PRESETS[environment_type])
         algorithm_name = self.config.get('generator_algorithm')
-        
+
         factory = self._factories.get(environment_type) or self.FACTORY_MAP.get(algorithm_name)
-        
+
         if factory is None:
             raise ValueError(f"No hay fábrica para: {environment_type} (algoritmo: {algorithm_name})")
-            
+
         print(f"Usando fábrica: {factory.__class__.__name__}")
         self.strategy = factory.create_strategy()
         self.factory = factory

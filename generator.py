@@ -1,59 +1,7 @@
 import random
-import numpy as np
+from collections import deque
 
-# --- Clases y Funciones Auxiliares ---
-
-class Leaf:
-    def __init__(self, x, y, width, height):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.child_1 = None
-        self.child_2 = None
-        self.room = None
-
-    def split(self, min_leaf_size):
-        # MODIFICADO: min_leaf_size ahora es un argumento
-        if self.child_1 is not None or self.child_2 is not None:
-            return False
-
-        split_horizontally = random.choice([True, False])
-        if self.width > self.height and self.width / self.height >= 1.25:
-            split_horizontally = False
-        elif self.height > self.width and self.height / self.width >= 1.25:
-            split_horizontally = True
-
-        max_size = (self.height if split_horizontally else self.width) - min_leaf_size
-        if max_size <= min_leaf_size:
-            return False
-
-        split_point = random.randint(min_leaf_size, max_size)
-
-        if split_horizontally:
-            self.child_1 = Leaf(self.x, self.y, self.width, split_point)
-            self.child_2 = Leaf(self.x, self.y + split_point, self.width, self.height - split_point)
-        else:
-            self.child_1 = Leaf(self.x, self.y, split_point, self.height)
-            self.child_2 = Leaf(self.x + split_point, self.y, self.width - split_point, self.height)
-            
-        return True
-    
-    def create_room(self, room_min_padding):
-        # MODIFICADO: room_min_padding es un argumento. Esta es tu lógica mejorada.
-        if self.child_1 is not None or self.child_2 is not None:
-            return
-
-        # Calcular dimensiones y posición de la habitación de forma segura
-        try:
-            room_width = random.randint(self.width // 2, self.width - room_min_padding * 2)
-            room_height = random.randint(self.height // 2, self.height - room_min_padding * 2)
-            room_x = random.randint(self.x + room_min_padding, self.x + self.width - room_width - room_min_padding)
-            room_y = random.randint(self.y + room_min_padding, self.y + self.height - room_height - room_min_padding)
-            self.room = {'x': room_x, 'y': room_y, 'width': room_width, 'height': room_height}
-        except ValueError:
-            # Si random.randint falla porque el mínimo es mayor que el máximo, simplemente no crea la habitación.
-            self.room = None
+from la import MapGenerator
 
 
 def connect_rooms(room1, room2, grid):
@@ -76,50 +24,78 @@ def connect_rooms(room1, room2, grid):
         for x in range(min(center1_x, center2_x), max(center1_x, center2_x) + 1):
             grid[center2_y, x] = 1
 
-# --- Función Principal (Wrapper para FastAPI) ---
+def _flood_fill_components(grid):
+    height, width = grid.shape
+    visited = set()
+    components = []
+    for y in range(height):
+        for x in range(width):
+            if grid[y, x] != 1 or (y, x) in visited:
+                continue
+            frontier = deque([(y, x)])
+            current_component = []
+            visited.add((y, x))
+            while frontier:
+                cy, cx = frontier.popleft()
+                current_component.append((cy, cx))
+                for ny, nx in ((cy - 1, cx), (cy + 1, cx), (cy, cx - 1), (cy, cx + 1)):
+                    if 0 <= ny < height and 0 <= nx < width and grid[ny, nx] == 1 and (ny, nx) not in visited:
+                        visited.add((ny, nx))
+                        frontier.append((ny, nx))
+            components.append(current_component)
+    return components
+
+
+def _connect_components(grid):
+    components = _flood_fill_components(grid)
+    if len(components) <= 1:
+        return
+    primary = components[0]
+    primary_set = set(primary)
+    for extra_component in components[1:]:
+        best_pair = None
+        best_distance = None
+        for cell_a in primary:
+            for cell_b in extra_component:
+                distance = abs(cell_a[0] - cell_b[0]) + abs(cell_a[1] - cell_b[1])
+                if best_distance is None or distance < best_distance:
+                    best_distance = distance
+                    best_pair = (cell_a, cell_b)
+        if best_pair is None:
+            continue
+        (ay, ax), (by, bx) = best_pair
+        pseudo_room_a = {'x': ax, 'y': ay, 'width': 1, 'height': 1}
+        pseudo_room_b = {'x': bx, 'y': by, 'width': 1, 'height': 1}
+        connect_rooms(pseudo_room_a, pseudo_room_b, grid)
+        primary_set.update(extra_component)
+        primary = list(primary_set)
+    # Validar nuevamente por si quedan componentes separados
+    remaining = _flood_fill_components(grid)
+    if len(remaining) > 1:
+        _connect_components(grid)
+
 
 def create_dungeon_layout(config: dict):
-    """
-    Función principal que toma una configuración y devuelve un mapa de calabozo.
-    """
-    # 1. Extraer parámetros de la configuración, con valores por defecto
-    MAP_WIDTH = config.get('width', 50)
-    MAP_HEIGHT = config.get('height', 30)
-    MIN_LEAF_SIZE = config.get('min_leaf_size', 6)
-    ROOM_MIN_PADDING = config.get('padding', 1)
+    """Genera mapas usando las estrategias avanzadas definidas en ``la.py``."""
+    environment_type = config.get('environment_type', 'dungeon')
+    generator = MapGenerator(environment_type=environment_type)
 
-    # 2. Partición
-    root_leaf = Leaf(0, 0, MAP_WIDTH, MAP_HEIGHT)
-    leaves_list = [root_leaf]
-    did_split = True
-    while did_split:
-        did_split = False
-        for leaf in list(leaves_list):
-            if leaf.child_1 is None and leaf.child_2 is None:
-                if leaf.width > MIN_LEAF_SIZE * 2 or leaf.height > MIN_LEAF_SIZE * 2:
-                    # Pasar MIN_LEAF_SIZE como argumento
-                    if leaf.split(MIN_LEAF_SIZE):
-                        leaves_list.append(leaf.child_1)
-                        leaves_list.append(leaf.child_2)
-                        did_split = True
+    key_map = {
+        'width': 'map_width',
+        'height': 'map_height',
+        'min_leaf_size': 'min_leaf_size',
+        'room_min_size': 'room_min_size',
+        'padding': 'room_padding',
+    }
 
-    # 3. Creación de habitaciones
-    final_leaves = [leaf for leaf in leaves_list if leaf.child_1 is None and leaf.child_2 is None]
-    for leaf in final_leaves:
-        # Pasar ROOM_MIN_PADDING como argumento
-        leaf.create_room(ROOM_MIN_PADDING)
+    overrides = {target: config[source] for source, target in key_map.items() if source in config}
+    extra_overrides = config.get('overrides')
+    if isinstance(extra_overrides, dict):
+        overrides.update(extra_overrides)
 
-    # 4. Conexión de habitaciones
-    dungeon_grid = np.zeros((MAP_HEIGHT, MAP_WIDTH), dtype=int)
-    for leaf in final_leaves:
-        if leaf.room:
-            room = leaf.room
-            dungeon_grid[room['y']:room['y']+room['height'], room['x']:room['x']+room['width']] = 1
-    
-    parent_leaves = [leaf for leaf in leaves_list if leaf.child_1 is not None and leaf.child_2 is not None]
-    for parent in parent_leaves:
-        if parent.child_1 and parent.child_1.room and parent.child_2 and parent.child_2.room:
-            connect_rooms(parent.child_1.room, parent.child_2.room, dungeon_grid)
-    
-    # 5. Devolver el resultado final
+    if overrides:
+        generator.config.update(overrides)
+
+    dungeon_grid = generator.generate()
+    _connect_components(dungeon_grid)
     return dungeon_grid
