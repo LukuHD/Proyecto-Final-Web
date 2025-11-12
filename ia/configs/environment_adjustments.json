@@ -1,1 +1,15 @@
-{}
+{
+  "dungeon": {
+    "min_leaf_size": 5,
+    "obstacle_multiplier": 1.0,
+    "room_min_size": 6
+  },
+  "forest": {
+    "obstacle_multiplier": 1.1,
+    "path_width": 3,
+    "extra_path_connections_prob": 0.3
+  },
+  "path_focused": {
+    "obstacle_multiplier": 1.1
+  }
+}
