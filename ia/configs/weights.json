@@ -1,11 +1,11 @@
 {
   "weights": {
-    "room_density": 0.20250147365740237,
-    "path_density": 0.20352355076055767,
-    "obstacle_density": 0.10634665457189615,
-    "avg_room_size": 0.26153860293372133,
-    "connectivity": 0.22608971807642264
+    "room_density": 0.18780724317220104,
+    "path_density": 0.18333618144692282,
+    "obstacle_density": 0.08881462271196756,
+    "avg_room_size": 0.2742451093769148,
+    "connectivity": 0.2657968432919938
   },
-  "iteration": 3,
+  "iteration": 5,
   "learning_rate": 0.1
 }
