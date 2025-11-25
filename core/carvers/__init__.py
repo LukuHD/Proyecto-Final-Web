@@ -236,18 +236,23 @@ class LargeCentralHubCarver(ClearingCarver):
             hub_edge_y = hub_y + int(hub_height * math.sin(angle))
             
             # Calcular punto en el borde del mapa
+            tan_angle = math.tan(angle)
             if abs(math.cos(angle)) > abs(math.sin(angle)):
                 if math.cos(angle) > 0:
                     map_edge_x = config['map_width'] - 1
                 else:
                     map_edge_x = 0
-                map_edge_y = hub_y + int((map_edge_x - hub_x) * math.tan(angle))
+                map_edge_y = hub_y + int((map_edge_x - hub_x) * tan_angle)
             else:
                 if math.sin(angle) > 0:
                     map_edge_y = config['map_height'] - 1
                 else:
                     map_edge_y = 0
-                map_edge_x = hub_x + int((map_edge_y - hub_y) / math.tan(angle))
+                # Avoid division by zero when tan_angle is 0
+                if abs(tan_angle) > 1e-10:
+                    map_edge_x = hub_x + int((map_edge_y - hub_y) / tan_angle)
+                else:
+                    map_edge_x = hub_x
             
             # Asegurarse de que los puntos estén dentro del mapa
             map_edge_x = max(0, min(config['map_width'] - 1, map_edge_x))
