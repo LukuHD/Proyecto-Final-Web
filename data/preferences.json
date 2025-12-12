@@ -1535,6 +1535,110 @@
                     }
                 },
                 "preferred": "A"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 6,
+                        "padding": 1
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3147
+                        },
+                        "room_distribution": {
+                            "score": 0.7331
+                        },
+                        "corridor_quality": {
+                            "score": 0.2097
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "min_leaf_size": 8,
+                        "padding": 2
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.3773
+                        },
+                        "room_distribution": {
+                            "score": 0.7188
+                        },
+                        "corridor_quality": {
+                            "score": 0.136
+                        },
+                        "dead_ends": {
+                            "score": 1.0
+                        }
+                    }
+                },
+                "preferred": "& C:/USERS/ANGEL/APPDATA/LOCAL/MICROSOFT/WINDOWSAPPS/PYTHON3.11.EXE C:/USERS/ANGEL/DOCUMENTS/GITHUB/PROYECTO-FINAL-WEB/TEST_LEARNING_AGENT.PY"
+            },
+            {
+                "map_a": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "environment_type": "forest"
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.4453
+                        },
+                        "room_distribution": {
+                            "score": 0.8078
+                        },
+                        "corridor_quality": {
+                            "score": 0.2081
+                        },
+                        "dead_ends": {
+                            "score": 0.9012
+                        }
+                    }
+                },
+                "map_b": {
+                    "config": {
+                        "width": 50,
+                        "height": 30,
+                        "environment_type": "path_focused"
+                    },
+                    "metrics": {
+                        "connectivity": {
+                            "score": 1.0
+                        },
+                        "density": {
+                            "score": 0.414
+                        },
+                        "room_distribution": {
+                            "score": 0.6766
+                        },
+                        "corridor_quality": {
+                            "score": 0.0097
+                        },
+                        "dead_ends": {
+                            "score": 0.971
+                        }
+                    }
+                },
+                "preferred": "A"
             }
         ]
     }
